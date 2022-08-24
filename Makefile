@@ -9,6 +9,8 @@ ORG ?= rancher
 PKG ?= github.com/kubernetes/dns
 SRC ?= github.com/kubernetes/dns
 TAG ?= 1.21.1$(BUILD_META)
+CREATED ?= $(shell date --iso-8601=s -u)
+REF ?= $(shell git symbolic-ref HEAD)
 
 ifneq ($(DRONE_TAG),)
 TAG := $(DRONE_TAG)
@@ -21,11 +23,14 @@ endif
 .PHONY: image-build
 image-build:
 	docker build \
-		--pull \
 		--build-arg PKG=$(PKG) \
 		--build-arg SRC=$(SRC) \
 		--build-arg ARCH=$(ARCH) \
 		--build-arg TAG=$(TAG:$(BUILD_META)=) \
+		--label "org.opencontainers.image.url=https://github.com/brooksn/image-build-dns-nodecache" \
+		--label "org.opencontainers.image.created=$(CREATED)" \
+		--label "org.opencontainers.image.authors=brooksn" \
+		--label "org.opencontainers.image.ref.name=$(REF)" \
 		--tag $(ORG)/hardened-dns-node-cache:$(TAG) \
 		--tag $(ORG)/hardened-dns-node-cache:$(TAG)-$(ARCH) \
 	.
