@@ -27,7 +27,7 @@ jobs:
     - name: Build and push image
       uses: rancher/ecm-distro-tools/actions/publish-image@master
       env:
-        SRC: "${{ github.token }}@brooksn/Kubernetes-dns"
+        SRC: "${{ github.token }}@github.com/brooksn/Kubernetes-dns"
       with:
         image: hardened-dns-node-cache
         tag: ${{ github.event.release.tag_name || inputs.tag }}
